@@ -1,21 +1,40 @@
-document.addEventListener("DOMContentLoaded", function() { // waits for the page to load before running the code
-  let buttons = document.getElementsByTagName("button");  // sets all buttons on the page to a variable
+// Wait for the DOM to finish loading before running the game
+// Get the button elements and add event listeners to them
 
-  for (let button of buttons)  // loops through all buttons on the page 
-  {
-    button.addEventListener("click", function() {    // adds an event listener to each button
-      if (this.getAttribute("data-type") === "submit") { // checks if the button clicked is the submit button
-        alert("You clicked Submit!"); // alerts the user that they clicked the submit button
-      } else {
-        let gameType = this.getAttribute("data-type"); // sets the gameType to the data-type attribute of the button clicked
-        alert(`You clicked ${gameType}`); // alerts the user that they clicked the gameType
-      }
-    })
-  }
+document.addEventListener("DOMContentLoaded", function() {
+    let buttons = document.getElementsByTagName("button");
 
-})
+    for (let button of buttons) {
+        button.addEventListener("click", function() {
+            if (this.getAttribute("data-type") === "submit") {
+                alert("You clicked Submit!");
+            } else {
+                let gameType = this.getAttribute("data-type");
+                runGame(gameType);
+            }
+        });
+    }
 
-function runGame() {
+    runGame("addition");
+
+});
+
+/**
+ * The main game "loop", called when the script is first loaded
+ * and after the user's answer has been processed
+ */
+function runGame(gameType) {
+
+    // Creates two random numbers between 1 and 25
+    let num1 = Math.floor(Math.random() * 25) + 1;
+    let num2 = Math.floor(Math.random() * 25) + 1;
+
+    if (gameType === "addition") {
+        displayAdditionQuestion(num1, num2);
+    } else {
+        alert(`Unknown game type: ${gameType}`);
+        throw `Unknown game type: ${gameType}. Aborting!`;
+    }
 
 }
 
@@ -23,11 +42,26 @@ function checkAnswer() {
 
 }
 
-function calculateCorrectAnswer () {
+/**
+ * Gets the operands (the numbers) and the operator (plus, minus etc)
+ * directly from the dom, and returns the correct answer.
+ */
+function calculateCorrectAnswer() {
+
+    let operand1 = parseInt(document.getElementById('operand1').innerText);
+    let operand2 = parseInt(document.getElementById('operand2').innerText);
+    let operator = document.getElementById("operator").innerText;
+
+    if (operator === "+") {
+        return [operand1 + operand2, "addition"];
+    } else {
+        alert(`Unimplemented operator ${operator}`);
+        throw `Unimplemented operator ${operator}. Aborting!`;
+    }
 
 }
 
-function incredmentScore() {
+function incrementScore() {
 
 }
 
@@ -35,8 +69,12 @@ function incrementWrongAnswer() {
 
 }
 
-function displayAdditionQuestion() {
+function displayAdditionQuestion(operand1, operand2) {
 
+    document.getElementById('operand1').textContent = operand1;
+    document.getElementById('operand2').textContent = operand2;
+    document.getElementById('operator').textContent = "+";
+    
 }
 
 function displaySubtractQuestion() {
@@ -44,9 +82,5 @@ function displaySubtractQuestion() {
 }
 
 function displayMultiplyQuestion() {
-
-}
-
-function displayDivideQuestion() {
-
+    
 }
